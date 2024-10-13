@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [GroupingSuite]" guice-stage="DEVELOPMENT">
+  <test thread-count="5" name="Test(failed)">
+    <parameter name="os" value="windows"/>
+    <parameter name="browser" value="edge"/>
+    <groups>
+      <run>
+        <include name="master"/>
+      </run>
+    </groups>
+    <classes>
+      <class name="testCases.TC003_LoginDD_Test">
+        <methods>
+          <include name="setup"/>
+          <include name="verifyDataDrivenTest" invocation-numbers="1 2"/>
+          <include name="tearDown"/>
+        </methods>
+      </class> <!-- testCases.TC003_LoginDD_Test -->
+    </classes>
+  </test> <!-- Test(failed) -->
+</suite> <!-- Failed suite [GroupingSuite] -->

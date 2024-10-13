@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+  
+  <!-- Define properties -->
+  <Properties>
+    <Property name="logPath">logs</Property>
+    <Property name="logFileName">app.log</Property>
+    <Property name="logLevel">debug</Property>
+    <Property name="filePattern">${logPath}/app-%d{MM-dd-yyyy}-%i.log.gz</Property>
+  </Properties>
+
+  <Appenders>
+    <!-- Console Appender -->
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout>
+        <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
+      </PatternLayout>
+    </Console>
+
+    <!-- Rolling File Appender using properties -->
+    <RollingFile name="RollingFile" fileName="${logPath}/${logFileName}" 
+                 filePattern="${filePattern}">
+      <PatternLayout>
+        <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5p %c{1.} - %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+        <SizeBasedTriggeringPolicy size="10000"/>
+      </Policies>
+    </RollingFile>
+  </Appenders>
+
+  <Loggers>
+    <!-- Root logger references the console and rolling appenders -->
+    <Root level="${logLevel}">
+     <!--  <AppenderRef ref="Console"/> -->
+     <AppenderRef ref="RollingFile"/>
+    </Root>
+  </Loggers>
+
+</Configuration>

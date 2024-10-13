@@ -1,0 +1,51 @@
+version: "3"
+services:
+  selenium-hub:
+    image: selenium/hub
+    container_name: selenium-hub
+    networks:
+      - selenium-grid
+    ports:
+      - "4444:4444"
+    environment:
+      - SE_OPENTELEMETRY_ENABLED=true
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317  # Point to the collector
+
+  chrome:
+    image: selenium/node-chrome
+    container_name: chrome
+    shm_size: "2g"
+    depends_on:
+      - selenium-hub
+    networks:
+      - selenium-grid
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+
+  firefox:
+    image: selenium/node-firefox
+    container_name: firefox
+    shm_size: "2g"
+    depends_on:
+      - selenium-hub
+    networks:
+      - selenium-grid
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    container_name: otel-collector
+    networks:
+      - selenium-grid
+    ports:
+      - "4317:4317"
+    command: ["--config=/etc/otel-collector-config.yaml"]
+
+networks:
+  selenium-grid:
+    driver: bridge
